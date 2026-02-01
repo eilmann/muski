@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date w Muski 🤎</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f2ede4;
+            --accent-pink: #e5c1c1;
+            --accent-sage: #c1dbc1;
+            --accent-maroon: #630000;
+            --accent-chocolate: #3d2b26;
+            --accent-latte: #d7ccc8;
+            --text-main: var(--accent-chocolate);
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(#dcd8c0 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
+            color: var(--text-main);
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .thrift-card {
+            background: #fffdfa;
+            border: 2px solid var(--accent-latte);
+            box-shadow: 6px 6px 0px var(--accent-chocolate);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .thrift-card:hover {
+            transform: translateY(-5px) rotate(1deg);
+            box-shadow: 8px 8px 0px var(--accent-maroon);
+        }
+
+        .tag-lace {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: var(--bg-color);
+            border: 2px solid #ddd;
+            border-radius: 50%;
+        }
+
+        .tape {
+            background: rgba(128, 0, 0, 0.2);
+            padding: 2px 15px;
+            transform: rotate(-2deg);
+            display: inline-block;
+            color: var(--accent-maroon);
+        }
+
+        .btn-sweet {
+            background-color: var(--accent-maroon);
+            color: white;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(128, 0, 0, 0.3);
+            transition: all 0.2s;
+        }
+
+        .btn-sweet:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Custom Alert Styles */
+        #cute-alert {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: white;
+            border: 2px solid var(--accent-pink);
+            box-shadow: 0 10px 25px rgba(229, 193, 193, 0.4);
+            border-radius: 20px;
+            padding: 15px 30px;
+            animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translate(-50%, -100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+        }
+
+        /* Calendar Styles */
+        #calendar-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(74, 63, 53, 0.3);
+            backdrop-filter: blur(5px);
+            z-index: 900;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-container {
+            background: var(--bg-color);
+            border: 1px solid #ddd;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 30px;
+            box-shadow: 10px 10px 0px var(--accent-pink);
+            overflow: hidden;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            padding: 20px;
+        }
+
+        .day-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .day-cell:hover:not(.disabled) {
+            background: var(--accent-sage);
+            color: white;
+        }
+
+        .day-cell.selected {
+            background: var(--accent-pink);
+            color: white;
+            font-weight: bold;
+            transform: scale(1.1);
+        }
+
+        .day-cell.disabled {
+            opacity: 0.15;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        .weekday {
+            font-weight: bold;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            color: #999;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        /* Intro Screen Styles */
+        #intro-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .polaroid-frame {
+            background: white;
+            padding: 10px 10px 30px 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transform: rotate(var(--rotation));
+            margin: -20px;
+            border: 1px solid #eee;
+            width: 140px;
+        }
+
+        .polaroid-frame img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            background: #eee;
+            /* Placeholder bg */
+        }
+
+        .photo-gallery {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 250px;
+            margin-bottom: 2rem;
+        }
+
+        .intro-text {
+            max-width: 500px;
+            line-height: 1.8;
+            color: var(--accent-chocolate);
+            margin-bottom: 2.5rem;
+        }
+
+        #main-app {
+            opacity: 0;
+            transition: opacity 1s ease;
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="p-6">
+    <!-- Intro Screen -->
+    <div id="intro-screen">
+        <div class="photo-gallery">
+            <div class="polaroid-frame" style="--rotation: -5deg; z-index: 4;">
+                <img src="p1.jpeg" alt="Memory 1">
+            </div>
+            <div class="polaroid-frame" style="--rotation: 3deg; z-index: 3;">
+                <img src="p2.jpeg" alt="Memory 2">
+            </div>
+            <div class="polaroid-frame" style="--rotation: -8deg; z-index: 2;">
+                <img src="p3.jpeg" alt="Memory 3">
+            </div>
+            <div class="polaroid-frame" style="--rotation: 6deg; z-index: 1;">
+                <img src="p4.jpeg" alt="Memory 4">
+            </div>
+        </div>
+
+        <div class="intro-text text-center italic">
+            <h2 class="text-3xl font-bold mb-4 not-italic">To: Afiqah cantik 🤎</h2>
+            <p>
+                As we move into a new month, I wanted to curate some special moments for us.
+                Our time together is the biggest hidden gem I've ever found,
+                and I can't wait to go on more adventures with you.
+            </p>
+            <p class="mt-4">
+                I've picked out a few things I think you'll love.. pick your favorites!
+                (Kalau ada suggestion lain pun bulih tambahh 😘)
+            </p>
+        </div>
+
+        <button onclick="startExperience()" class="btn-sweet px-12 py-5 font-bold tracking-widest text-lg">
+            OPEN OUR PLAN 🎀
+        </button>
+    </div>
+
+    <!-- Main Content Container -->
+    <div id="main-app">
+        <header class="mb-12 text-center relative">
+            <div class="absolute -top-4 left-0 text-3xl opacity-20">🧸 ✨ 🥐</div>
+            <div class="absolute -top-4 right-0 text-3xl opacity-20">🎀 🌿 ☕️</div>
+
+            <div class="tape mb-4">
+                <span class="text-xs font-bold tracking-widest">Yayyy datinggg</span>
+            </div>
+            <h1 class="text-4xl font-bold italic mb-2">Our Date Proposal</h1>
+            <p class="text-sm text-gray-500 italic">select some cute things for us to do ~ ✨</p>
+        </header>
+
+        <!-- Music Toggle -->
+        <div class="fixed top-6 right-6 z-50">
+            <button onclick="toggleMusic()" id="music-btn"
+                class="w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center border border-gray-100 hover:scale-110 transition active:scale-95">
+                📻
+            </button>
+            <audio id="bg-music" loop>
+                <source src="music.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+
+        <div id="product-grid" class="grid gap-6 mb-12 max-w-2xl mx-auto"></div>
+
+        <!-- Suggestion Section -->
+        <div class="max-w-2xl mx-auto mb-32">
+            <div class="thrift-card p-6 rotate-[-1deg]">
+                <div class="tag-lace"></div>
+                <h3 class="text-xl font-bold mb-3 italic">Any other cute ideas? 📝</h3>
+                <textarea id="suggestion-input"
+                    class="w-full h-32 p-4 bg-transparent border-2 border-dashed border-[#d7ccc8] focus:border-[#3d2b26] outline-none transition resize-none text-sm italic placeholder:opacity-40"
+                    placeholder="Maybe a specific movie? Or a snack you've been craving? Write it here... 🤎"></textarea>
+            </div>
+        </div>
+
+        <div
+            class="fixed bottom-0 left-0 w-full p-6 bg-white/80 backdrop-blur-md border-t border-gray-100 flex justify-between items-center shadow-2xl z-50">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-12 h-12 rounded-full bg-[#fcf5f5] flex items-center justify-center text-2xl floating border border-[#e5c1c1]/30">
+                    🧸</div>
+                <div>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">Planned Activities</p>
+                    <p id="cart-count" class="text-2xl font-bold text-[#800000]">0</p>
+                </div>
+            </div>
+            <button onclick="checkout()"
+                class="btn-sweet px-10 py-4 font-bold tracking-wide active:scale-95 transition">
+                SEND PROPOSAL 💌
+            </button>
+        </div>
+
+        <!-- Custom Alert -->
+        <div id="cute-alert">
+            <p id="alert-message" class="italic text-sm font-medium"></p>
+        </div>
+
+        <!-- Calendar Modal -->
+        <div id="calendar-modal">
+            <div class="calendar-container p-6 relative">
+                <button onclick="closeCalendar()"
+                    class="absolute top-4 right-4 opacity-30 hover:opacity-100 italic text-sm">close [x]</button>
+                <div class="text-center mb-6">
+                    <div class="tape mb-2"><span class="text-[10px] font-bold">FEBRUARY 2026</span></div>
+                    <h2 class="text-xl font-bold">Pick Our 2 Best Days 📅</h2>
+                    <p class="text-[10px] text-gray-400 italic mt-1">available dates only (tue/wed/fri excluded) ~ <br>
+                        kitonya kerja</p>
+                </div>
+
+                <div class="grid grid-cols-7 gap-1 px-2 mb-6">
+                    <div class="weekday">Sun</div>
+                    <div class="weekday">Mon</div>
+                    <div class="weekday">Tue</div>
+                    <div class="weekday">Wed</div>
+                    <div class="weekday">Thu</div>
+                    <div class="weekday">Fri</div>
+                    <div class="weekday">Sat</div>
+                    <div id="calendar-days" class="contents"></div>
+                </div>
+
+                <button onclick="confirmDates()" class="btn-sweet w-full py-3 font-bold text-sm tracking-widest">
+                    CONFIRM DATES & SEND ✨
+                </button>
+            </div>
+        </div>
+        <script>
+            function startExperience() {
+                const intro = document.getElementById('intro-screen');
+                const main = document.getElementById('main-app');
+
+                intro.style.opacity = '0';
+                intro.style.visibility = 'hidden';
+
+                setTimeout(() => {
+                    main.style.display = 'block';
+                    setTimeout(() => {
+                        main.style.opacity = '1';
+                    }, 50);
+                    renderProducts(); // Render products once main app is shown
+
+                    // Start music automatically on entry
+                    if (!isPlaying) {
+                        toggleMusic();
+                    }
+                }, 800);
+            }
+
+            const dateOptions = [
+                { id: 1, title: "Thrift Shopping 🧥", price: "ABEY DOK KENAL BAREY", info: "Selam-selam mencari hidden gems. <br>Venue: TBD" },
+                { id: 2, title: "Cafe / Dessert Hunting 🍰", price: "SEBAB KO BOBES", info: "Kau bobes!! Kau bolat!! Kau cekelat!!. <br>Venue: SS15/Keyes/CBTL/KLCG/DLL" },
+                { id: 3, title: "Museum Date 🏛️", price: "TERPALING CULTURED", info: "Ni sebab you pernah mention and seems interesting since I memang cultered. <br>Venue: TBD" },
+                { id: 4, title: "Lakeside Picnic 🧺", price: "OKAY NI HEBAT", info: "Kita beli makanan, kita beli tikar, astu kita snacking tepi tasik. <br>Venue: TBD" }
+            ];
+
+            let cart = [];
+            let selectedDates = [];
+
+            let isPlaying = false;
+            function toggleMusic() {
+                const music = document.getElementById('bg-music');
+                const btn = document.getElementById('music-btn');
+                if (isPlaying) {
+                    music.pause();
+                    btn.innerText = '📻';
+                    btn.classList.remove('animate-pulse');
+                } else {
+                    music.play().catch(e => console.log("Autoplay blocked"));
+                    btn.innerText = '🎵';
+                    btn.classList.add('animate-pulse');
+                }
+                isPlaying = !isPlaying;
+            }
+
+            function showCuteAlert(msg) {
+                const alertBox = document.getElementById('cute-alert');
+                const alertMsg = document.getElementById('alert-message');
+                alertMsg.innerText = msg;
+                alertBox.style.display = 'block';
+                setTimeout(() => {
+                    alertBox.style.display = 'none';
+                }, 3000);
+            }
+
+            function renderProducts() {
+                const grid = document.getElementById('product-grid');
+
+                grid.innerHTML = dateOptions.map(item => `
+                <div class="thrift-card p-6 flex flex-col justify-between h-52">
+                    <div class="tag-lace"></div>
+                    <div>
+                        <div class="flex justify-between items-start">
+                             <span class="text-[10px] font-bold tracking-widest text-[#800000] uppercase mb-1 block">${item.price}</span>
+                             <span class="text-xs opacity-40">#00${item.id}</span>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-1">${item.title}</h3>
+                        <p class="text-xs text-gray-400 italic font-medium leading-relaxed">${item.info}</p>
+                    </div>
+                    <button onclick="addToCart('${item.title}')" 
+                        class="text-left text-xs font-bold text-[#4d362f] hover:text-[#800000] transition flex items-center gap-1 group">
+                        <span class="group-hover:translate-x-1 transition-transform inline-block">♡</span> 
+                        ADD TO PLAN
+                    </button>
+                </div>
+            `).join('');
+            }
+
+            function addToCart(title) {
+                if (cart.includes(title)) {
+                    return showCuteAlert("This item is already in your plan! 🧸");
+                }
+                cart.push(title);
+                document.getElementById('cart-count').innerText = cart.length;
+                console.log("Added: " + title);
+            }
+
+            function checkout() {
+                if (cart.length === 0) return showCuteAlert("Select at least one activity! 🎀");
+                openCalendar();
+            }
+
+            function openCalendar() {
+                const modal = document.getElementById('calendar-modal');
+                const daysGrid = document.getElementById('calendar-days');
+                modal.style.display = 'flex';
+
+                // Feb 2026 starts on Sunday (day 0)
+                const daysInMonth = 28;
+                let daysHtml = '';
+
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const date = new Date(2026, 1, i); // Month 1 is February
+                    const dayOfWeek = date.getDay();
+                    // User works Tue (2), Wed (3), Thu (4)
+                    const isWorkDay = [2, 3, 4].includes(dayOfWeek);
+                    const isSelected = selectedDates.includes(i);
+
+                    daysHtml += `
+                    <div class="day-cell ${isWorkDay ? 'disabled' : ''} ${isSelected ? 'selected' : ''}" 
+                         onclick="${isWorkDay ? '' : `toggleDate(${i})`}">
+                         ${i}
+                    </div>
+                `;
+                }
+                daysGrid.innerHTML = daysHtml;
+            }
+
+            function closeCalendar() {
+                document.getElementById('calendar-modal').style.display = 'none';
+            }
+
+            function toggleDate(day) {
+                const index = selectedDates.indexOf(day);
+                if (index > -1) {
+                    selectedDates.splice(index, 1);
+                } else {
+                    if (selectedDates.length >= 2) {
+                        return showCuteAlert("Only 2 days allowed! Choose carefully ✨");
+                    }
+                    selectedDates.push(day);
+                }
+                openCalendar(); // Re-render
+            }
+
+            function confirmDates() {
+                if (selectedDates.length !== 2) {
+                    return showCuteAlert("Please select exactly 2 days! 💘");
+                }
+
+                const formattedDates = selectedDates.sort((a, b) => a - b).map(d => `${d} Feb`).join(" and ");
+                const suggestion = document.getElementById('suggestion-input').value.trim();
+
+                let message = `Hey! I've picked out some cute things for our date: ${cart.join(", ")}. I'm thinking we go on ${formattedDates}.`;
+
+                if (suggestion) {
+                    message += ` Specifically, I was thinking: "${suggestion}"`;
+                }
+
+                message += ` Can't wait! ✨🎀`;
+
+                const phoneNumber = "601111775676";
+                const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+                window.open(url, '_blank');
+            }
+
+            // renderProducts(); // Called in startExperience or on load if no intro
+        </script>
+</body>
+
+</html>
