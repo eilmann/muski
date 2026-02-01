@@ -47,6 +47,12 @@
             box-shadow: 8px 8px 0px var(--accent-maroon);
         }
 
+        .thrift-card.selected {
+            border-color: var(--accent-maroon);
+            box-shadow: 6px 6px 0px var(--accent-maroon);
+            background: #fff5f5;
+        }
+
         .tag-lace {
             position: absolute;
             top: -10px;
@@ -434,33 +440,40 @@
             function renderProducts() {
                 const grid = document.getElementById('product-grid');
 
-                grid.innerHTML = dateOptions.map(item => `
-                <div class="thrift-card p-6 flex flex-col justify-between h-52">
-                    <div class="tag-lace"></div>
-                    <div>
-                        <div class="flex justify-between items-start">
-                             <span class="text-[10px] font-bold tracking-widest text-[#800000] uppercase mb-1 block">${item.price}</span>
-                             <span class="text-xs opacity-40">#00${item.id}</span>
+                grid.innerHTML = dateOptions.map(item => {
+                    const isSelected = cart.includes(item.title);
+                    return `
+                        <div class="thrift-card p-6 flex flex-col justify-between h-52 ${isSelected ? 'selected' : ''}">
+                            <div class="tag-lace"></div>
+                            <div>
+                                <div class="flex justify-between items-start">
+                                     <span class="text-[10px] font-bold tracking-widest text-[#800000] uppercase mb-1 block">${item.price}</span>
+                                     <span class="text-xs opacity-40">#00${item.id}</span>
+                                </div>
+                                <h3 class="text-2xl font-bold mb-1">${item.title}</h3>
+                                <p class="text-xs text-gray-400 italic font-medium leading-relaxed">${item.info}</p>
+                            </div>
+                            <button onclick="toggleActivity('${item.title}')" 
+                                class="text-left text-xs font-bold ${isSelected ? 'text-[#800000]' : 'text-[#4d362f]'} hover:text-[#800000] transition flex items-center gap-1 group">
+                                <span class="group-hover:translate-x-1 transition-transform inline-block">${isSelected ? '♥' : '♡'}</span> 
+                                ${isSelected ? 'REMOVE FROM PLAN' : 'ADD TO PLAN'}
+                            </button>
                         </div>
-                        <h3 class="text-2xl font-bold mb-1">${item.title}</h3>
-                        <p class="text-xs text-gray-400 italic font-medium leading-relaxed">${item.info}</p>
-                    </div>
-                    <button onclick="addToCart('${item.title}')" 
-                        class="text-left text-xs font-bold text-[#4d362f] hover:text-[#800000] transition flex items-center gap-1 group">
-                        <span class="group-hover:translate-x-1 transition-transform inline-block">♡</span> 
-                        ADD TO PLAN
-                    </button>
-                </div>
-            `).join('');
+                    `;
+                }).join('');
             }
 
-            function addToCart(title) {
-                if (cart.includes(title)) {
-                    return showCuteAlert("This item is already in your plan! 🧸");
+            function toggleActivity(title) {
+                const index = cart.indexOf(title);
+                if (index > -1) {
+                    cart.splice(index, 1);
+                    console.log("Removed: " + title);
+                } else {
+                    cart.push(title);
+                    console.log("Added: " + title);
                 }
-                cart.push(title);
                 document.getElementById('cart-count').innerText = cart.length;
-                console.log("Added: " + title);
+                renderProducts(); // Refresh UI
             }
 
             function checkout() {
