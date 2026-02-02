@@ -345,6 +345,24 @@
 
         .polaroid-frame {
             cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: polaroidFloat 4s ease-in-out infinite alternate;
+        }
+
+        .polaroid-frame:hover {
+            transform: scale(1.1) rotate(0deg) !important;
+            z-index: 50 !important;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes polaroidFloat {
+            from {
+                transform: rotate(var(--rotation)) translateY(0);
+            }
+
+            to {
+                transform: rotate(var(--rotation)) translateY(-10px);
+            }
         }
     </style>
 </head>
@@ -367,10 +385,10 @@
             </div>
         </div>
 
-        <div class="intro-text text-center italic">
-            <h2 class="text-3xl font-bold mb-4 not-italic">To: Afiqah cantik 🤎</h2>
-            <p id="monthsary-heading" class="text-xl font-bold not-italic text-[#800000] mb-2"></p>
+        <div class="intro-text text-center italic text-lg opacity-90">
+            <h2 class="text-3xl font-bold mb-6 not-italic">To: Afiqah cantik 🤎</h2>
             <p>
+                <span id="monthsary-heading" class="font-bold not-italic text-[#800000]"></span>
                 I wanted to curate some special moments for us.
                 Our time together is the biggest hidden gem I've ever found,
                 and I can't wait to go on more adventures with you.
@@ -481,8 +499,8 @@
                 <div class="text-center mb-6">
                     <div class="tape mb-2"><span class="text-[10px] font-bold">FEBRUARY 2026</span></div>
                     <h2 class="text-xl font-bold">Pick Our 2 Best Days 📅</h2>
-                    <p class="text-[10px] text-gray-400 italic mt-1">available dates only (tue/wed/fri excluded) ~ <br>
-                        kitonya kerja</p>
+                    <p class="text-[10px] text-gray-400 italic mt-1">*tengok wayang kat bilik I is a must! <br>
+                        (before or after the dates)</p>
                 </div>
 
                 <div class="grid grid-cols-7 gap-1 px-2 mb-6">
@@ -540,15 +558,15 @@
                     return n + (s[(v - 20) % 10] || s[v] || s[0]);
                 };
 
-                document.getElementById('monthsary-heading').innerText = `Happy ${getOrdinal(months)} Monthsary! 🎀`;
+                document.getElementById('monthsary-heading').innerText = `Happy ${getOrdinal(months)} Monthsary! `;
             }
 
             // Photo Modal Logic
             const photoCaptions = [
-                "This was one of our first special moments... I knew then you were special. 🤎",
-                "I love how you look at the world. Every adventure with you is a dream. ✨",
-                "My favorite view will always be you. Thank you for choosing me. 🌿",
-                "Here's to many more memories, many more laughs, and a lifetime of us. 🎀"
+                "This was one of our first special moments... I knew then you were special. ",
+                "I love how you look at the world. Every adventure with you is a dream. ",
+                "My favorite view will always be you. Thank you for choosing me. ",
+                "Here's to many more memories, many more laughs, and a lifetime of us. "
             ];
 
             function openPhoto(index) {
