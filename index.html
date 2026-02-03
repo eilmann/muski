@@ -364,6 +364,102 @@
                 transform: rotate(var(--rotation)) translateY(-10px);
             }
         }
+
+        /* Quiz Screen Styles */
+        #quiz-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            background-color: var(--bg-color);
+            position: fixed;
+            inset: 0;
+            z-index: 1500;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            overflow-y: auto;
+        }
+
+        .quiz-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid var(--accent-latte);
+            position: relative;
+            display: none;
+        }
+
+        .quiz-card.active {
+            display: block;
+            animation: fadeInScale 0.5s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+
+        .color-swatch {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.1);
+        }
+
+        .color-swatch.selected {
+            border-color: var(--accent-maroon);
+            transform: scale(1.1);
+        }
+
+        .quiz-option {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border: 2px solid #f8f8f8;
+            border-radius: 12px;
+            text-align: left;
+            font-weight: 500;
+            transition: all 0.2s;
+            background: #fff;
+            color: #4d362f;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--accent-latte);
+            background: #fafafa;
+        }
+
+        .quiz-option.selected {
+            border-color: var(--accent-maroon);
+            background: #fff5f5;
+            color: var(--accent-maroon);
+        }
     </style>
 </head>
 
@@ -417,6 +513,141 @@
         <button onclick="startExperience()" class="btn-sweet px-12 py-5 font-bold tracking-widest text-lg">
             OPEN OUR PLAN 🎀
         </button>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quiz-screen">
+        <div class="tape mb-8"><span class="text-xs font-bold tracking-widest text-[#800000]">Director's Cut: Movie
+                Night Vibe Check 🍿🎬</span></div>
+
+        <!-- Step 1: Atmosphere -->
+        <div class="quiz-card active" data-step="1">
+            <h3 class="text-2xl font-bold mb-6 italic text-center text-[#4d362f]">"If we were to film a movie of us,
+                what's the visual atmosphere?" ✨</h3>
+            <button class="quiz-option" onclick="selectQuizOption(1, 'A')">🌱 Spring: Everything is fresh, new, and
+                blooming.</button>
+            <button class="quiz-option" onclick="selectQuizOption(1, 'B')">☀️ Summer: Long days, adventures, and bright
+                energy.</button>
+            <button class="quiz-option" onclick="selectQuizOption(1, 'C')">🍂 Autumn: Crisp air, layers, and cozying
+                up.</button>
+            <button class="quiz-option" onclick="selectQuizOption(1, 'D')">❄️ Winter: Stillness, sparkle, and staying
+                indoors.</button>
+        </div>
+
+        <!-- Step 2: The Iconic Prop -->
+        <div class="quiz-card" data-step="2">
+            <h3 class="text-2xl font-bold mb-6 italic text-center text-[#4d362f]">"The lead actress (you!) needs one
+                iconic prop for the scene. What is it?" 💎</h3>
+            <button class="quiz-option" onclick="selectQuizOption(2, 'A')">💍 A piece of jewelry that tells a
+                story.</button>
+            <button class="quiz-option" onclick="selectQuizOption(2, 'B')">👜 A designer bag that fits everything
+                perfectly.</button>
+            <button class="quiz-option" onclick="selectQuizOption(2, 'C')">👟 A pair of shoes that are surprisingly
+                comfortable.</button>
+            <button class="quiz-option" onclick="selectQuizOption(2, 'D')">✨ A signature scent that lingers in the
+                room.</button>
+        </div>
+
+        <!-- Step 3: Opening Scene -->
+        <div class="quiz-card" data-step="3">
+            <h3 class="text-2xl font-bold mb-6 italic text-center text-[#4d362f]">"What's the opening scene of our date
+                movie?" 🥐</h3>
+            <button class="quiz-option" onclick="selectQuizOption(3, 'A')">☕ Out at a bustling cafe for brunch and
+                people-watching.</button>
+            <button class="quiz-option" onclick="selectQuizOption(3, 'B')">🏃‍♀️ Ticking off satisfying errands or a
+                light workout.</button>
+            <button class="quiz-option" onclick="selectQuizOption(3, 'C')">📖 Wrapped in a robe with a hot drink and a
+                book.</button>
+            <button class="quiz-option" onclick="selectQuizOption(3, 'D')">🎨 Starting a small creative project or
+                session.</button>
+        </div>
+
+        <!-- Step 4: Plot Twist (Luggage) -->
+        <div class="quiz-card" data-step="4">
+            <h3 class="text-2xl font-bold mb-6 italic text-center text-[#4d362f]">"Plot Twist! We win a trip tomorrow.
+                What are you packing?" ✈️</h3>
+            <button class="quiz-option" onclick="selectQuizOption(4, 'A')">🎒 A backpack—I want my hands free for
+                exploring.</button>
+            <button class="quiz-option" onclick="selectQuizOption(4, 'B')">🧳 A chic, coordinated suitcase set.</button>
+            <button class="quiz-option" onclick="selectQuizOption(4, 'C')">🧸 One medium bag—only essentials and comfort
+                items.</button>
+            <button class="quiz-option" onclick="selectQuizOption(4, 'D')">💻 Extra-large bag—I need all my tools and
+                'just in case' items.</button>
+        </div>
+
+        <!-- Step 5: Set Design (Textures) -->
+        <div class="quiz-card" data-step="5">
+            <h3 class="text-2xl font-bold mb-6 italic text-center text-[#4d362f]">"For our set design, which texture
+                feels the most satisfying?" ✨</h3>
+            <button class="quiz-option" onclick="selectQuizOption(5, 'A')">💎 Smooth, cool polished stone or
+                metal.</button>
+            <button class="quiz-option" onclick="selectQuizOption(5, 'B')">👜 Soft, buttery leather or suede.</button>
+            <button class="quiz-option" onclick="selectQuizOption(5, 'C')">🧶 Fluffy, thick-knit wool or
+                fleece.</button>
+            <button class="quiz-option" onclick="selectQuizOption(5, 'D')">👕 Crisp, clean high-thread-count
+                cotton.</button>
+        </div>
+
+        <!-- Step 6: Director's Cut (Upgrade) -->
+        <div class="quiz-card" data-step="6">
+            <h3 class="text-2xl font-bold mb-6 italic text-center text-[#4d362f]">"If you could 'upgrade' one part of
+                our daily routine instantly?" ⏳</h3>
+            <button class="quiz-option" onclick="selectQuizOption(6, 'A')">🚲 The 'fun' part (more music, better tech,
+                more fun).</button>
+            <button class="quiz-option" onclick="selectQuizOption(6, 'B')">👗 The 'getting ready' part (organization,
+                nicer clothes).</button>
+            <button class="quiz-option" onclick="selectQuizOption(6, 'C')">🕯️ The 'winding down' part (lighting, softer
+                textures).</button>
+            <button class="quiz-option" onclick="selectQuizOption(6, 'D')">💼 The 'work' part (better tools, more
+                efficiency).</button>
+        </div>
+
+        <!-- Step 7: Color Grading -->
+        <div class="quiz-card" data-step="7">
+            <h3 class="text-2xl font-bold mb-2 italic text-center text-[#4d362f]">"Pick a color for the movie's color
+                grading..." 🎨</h3>
+            <p class="text-xs text-gray-400 text-center mb-4 italic">Which one speaks to your soul right now?</p>
+            <div class="color-grid">
+                <div class="color-swatch" style="background-color: #F4C2C2" data-name="Ballet Pink"
+                    onclick="selectColor(this, 'Ballet Pink')"></div>
+                <div class="color-swatch" style="background-color: #E1D5C1" data-name="Biscotti"
+                    onclick="selectColor(this, 'Biscotti')"></div>
+                <div class="color-swatch" style="background-color: #C19A6B" data-name="Camel"
+                    onclick="selectColor(this, 'Camel')"></div>
+                <div class="color-swatch" style="background-color: #937091" data-name="Mauve"
+                    onclick="selectColor(this, 'Mauve')"></div>
+                <div class="color-swatch" style="background-color: #6E5D4B" data-name="Moss Brown"
+                    onclick="selectColor(this, 'Moss Brown')"></div>
+                <div class="color-swatch" style="background-color: #85865F" data-name="Oregano"
+                    onclick="selectColor(this, 'Oregano')"></div>
+                <div class="color-swatch" style="background-color: #953532" data-name="Scarlet"
+                    onclick="selectColor(this, 'Scarlet')"></div>
+                <div class="color-swatch" style="background-color: #B5B5B5" data-name="Silverfox"
+                    onclick="selectColor(this, 'Silverfox')"></div>
+                <div class="color-swatch" style="background-color: #73899C" data-name="Stone Blue"
+                    onclick="selectColor(this, 'Stone Blue')"></div>
+                <div class="color-swatch" style="background-color: #B36A5E" data-name="Terracotta"
+                    onclick="selectColor(this, 'Terracotta')"></div>
+            </div>
+            <button id="color-next-btn" class="btn-sweet w-full mt-10 py-3 text-sm opacity-50 cursor-not-allowed"
+                disabled onclick="nextQuizStep()">PREVIEW THE CUT ✨</button>
+        </div>
+
+        <!-- Result Card -->
+        <div class="quiz-card" data-step="8">
+            <div class="text-center">
+                <div class="text-4xl mb-4">🎬</div>
+                <h3 class="text-2xl font-bold mb-2 italic text-[#4d362f]">The Director's Verdict</h3>
+                <p class="text-sm text-gray-500 mb-6 italic">Based on your choices, our movie night vibe is...</p>
+                <div class="bg-[#fcf5f5] p-5 rounded-xl border border-[#e5c1c1]/30 mb-8">
+                    <p class="text-xs uppercase tracking-widest text-gray-400 mb-1">Cinematic Archetype</p>
+                    <p id="movie-archetype" class="text-xl font-bold text-[#800000] mb-2"></p>
+                    <p id="movie-desc" class="text-[10px] text-[#4d362f] italic opacity-70"></p>
+                </div>
+                <button onclick="finishQuiz()" class="btn-sweet w-full py-4 font-bold tracking-widest">CONTINUE TO PLAN
+                    🎀</button>
+            </div>
+        </div>
     </div>
 
     <!-- Photo Modal Overlay -->
@@ -587,19 +818,114 @@
                 setTimeout(() => modal.style.display = 'none', 500);
             }
 
+            // Quiz Logic
+            let quizScores = { A: 0, B: 0, C: 0, D: 0 };
+            let quizAnswers = { color: '' };
+            let currentQuizStep = 1;
+
+            function selectQuizOption(step, value) {
+                quizScores[value]++;
+                nextQuizStep();
+            }
+
+            function selectColor(element, colorName) {
+                document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+                element.classList.add('selected');
+
+                quizAnswers.color = colorName;
+
+                const nextBtn = document.getElementById('color-next-btn');
+                nextBtn.disabled = false;
+                nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+
+            function nextQuizStep() {
+                const currentCard = document.querySelector(`.quiz-card[data-step="${currentQuizStep}"]`);
+                currentCard.classList.remove('active');
+
+                currentQuizStep++;
+
+                const nextCard = document.querySelector(`.quiz-card[data-step="${currentQuizStep}"]`);
+                if (nextCard) {
+                    setTimeout(() => {
+                        nextCard.classList.add('active');
+                        if (currentQuizStep === 8) {
+                            calculateGiftResult();
+                        }
+                    }, 100);
+                }
+            }
+
+            function calculateGiftResult() {
+                // Determine dominant archetype
+                let maxScore = 0;
+                let archetype = 'A';
+                for (const key in quizScores) {
+                    if (quizScores[key] > maxScore) {
+                        maxScore = quizScores[key];
+                        archetype = key;
+                    }
+                }
+
+                const results = {
+                    'A': {
+                        title: "The Adventurer 🗺️✨",
+                        desc: "You crave experiences, memories, and the thrill of the new. Your story is always on the move.",
+                        insight: "She wants Experiences or Memories (Jewelry with meaning, tickets, or tech for memories)."
+                    },
+                    'B': {
+                        title: "The Icon 💄👠",
+                        desc: "Effortless style and grace guide your cinematic vision. You appreciate the finer details.",
+                        insight: "She wants Style & Status (A designer slouchie bag or high-end fashion accessory)."
+                    },
+                    'C': {
+                        title: "The Curator 🕯️🧸",
+                        desc: "You prioritize sensory joy and creating the perfect sanctuary. Comfort is your masterpiece.",
+                        insight: "She wants Comfort & Sensory Joy (Luxury candles, weighted blankets, or high-end loungewear)."
+                    },
+                    'D': {
+                        title: "The Creator 🎨⚙️",
+                        desc: "Utility, inspiration, and mastery of the craft are your signatures. You value purpose and beauty.",
+                        insight: "She wants Utility & Inspiration (Creative tools, books, or high-quality hobby equipment)."
+                    }
+                };
+
+                const res = results[archetype];
+                document.getElementById('movie-archetype').innerText = res.title;
+                document.getElementById('movie-desc').innerText = res.desc;
+
+                // Store for WhatsApp
+                window.finalArchetype = res.title;
+                window.secretInsight = res.insight;
+            }
+
+            function finishQuiz() {
+                const quiz = document.getElementById('quiz-screen');
+                const main = document.getElementById('main-app');
+
+                quiz.style.opacity = '0';
+                setTimeout(() => {
+                    quiz.style.display = 'none';
+                    main.style.display = 'block';
+                    setTimeout(() => {
+                        main.style.opacity = '1';
+                    }, 50);
+                    renderProducts();
+                }, 800);
+            }
+
             function startExperience() {
                 const intro = document.getElementById('intro-screen');
-                const main = document.getElementById('main-app');
+                const quiz = document.getElementById('quiz-screen');
 
                 intro.style.opacity = '0';
                 intro.style.visibility = 'hidden';
 
                 setTimeout(() => {
-                    main.style.display = 'block';
+                    quiz.style.display = 'flex';
                     setTimeout(() => {
-                        main.style.opacity = '1';
+                        quiz.style.opacity = '1';
                     }, 50);
-                    renderProducts(); // Render products once main app is shown
 
                     // Start music automatically on entry
                     if (!isPlaying) {
@@ -739,13 +1065,22 @@
                 const formattedDates = selectedDates.sort((a, b) => a - b).map(d => `${d} Feb`).join(" and ");
                 const suggestion = document.getElementById('suggestion-input').value.trim();
 
-                let message = `Hey! I've picked out some cute things for our date: ${cart.join(", ")}. I'm thinking we go on ${formattedDates}.`;
+                const movieVibe = window.finalArchetype;
+                const secretInsight = window.secretInsight;
+                const giftColor = quizAnswers.color;
+
+                let message = `Hye Muski! 🤎✨ I've picked out some cute things for our date: ${cart.join(", ")}. I'm thinking we go on ${formattedDates}.`;
+
+                message += `\n\nMovie Night Vibe Check:`;
+                message += `\n🎬 Cinematic Archetype: ${movieVibe}`;
+                message += `\n🎨 Color Grade: ${giftColor}`;
+                message += `\n\n(Abey's Secret Insight: ${secretInsight})`;
 
                 if (suggestion) {
-                    message += ` Specifically, I was thinking: "${suggestion}"`;
+                    message += `\n\nSpecifically, I was thinking: "${suggestion}"`;
                 }
 
-                message += ` Can't wait! ✨🎀`;
+                message += `\n\nCan't wait! ✨🎀`;
 
                 const phoneNumber = "601111775676";
                 const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
